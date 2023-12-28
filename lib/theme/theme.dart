@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-export 'cubit/theme_cubit.dart';
+export 'logic/logic.dart';
 export 'widgets/widgets.dart';
 
 final lightTheme = ThemeData(

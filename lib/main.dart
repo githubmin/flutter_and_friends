@@ -29,7 +29,6 @@ class App extends StatelessWidget {
       create: (_) => ShorebirdCodePush(),
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(create: (_) => ThemeCubit()),
           BlocProvider(create: (_) => UpdaterCubit()..init()),
         ],
         child: const AppView(),
@@ -38,14 +37,12 @@ class App extends StatelessWidget {
   }
 }
 
-class AppView extends StatelessWidget {
+class AppView extends ConsumerWidget {
   const AppView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final themeMode = context.select(
-      (ThemeCubit cubit) => cubit.state.toThemeMode(),
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeDataProvider).toThemeMode();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const UpdateListener(child: LaunchpadPage()),
@@ -53,11 +50,5 @@ class AppView extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
     );
-  }
-}
-
-extension on ThemeState {
-  ThemeMode toThemeMode() {
-    return this == ThemeState.dark ? ThemeMode.dark : ThemeMode.light;
   }
 }
