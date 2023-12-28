@@ -1,4 +1,5 @@
-part of 'settings_cubit.dart';
+import 'package:equatable/equatable.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 final class SettingsState extends Equatable {
   const SettingsState({

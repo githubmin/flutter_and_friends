@@ -1,2 +1,2 @@
-export 'cubit/settings_cubit.dart';
+export 'logic/logic.dart';
 export 'views/views.dart';

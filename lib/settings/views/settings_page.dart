@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_and_friends/settings/settings.dart';
+import 'package:flutter_and_friends/settings/logic/providers.dart';
 import 'package:flutter_and_friends/theme/theme.dart';
 import 'package:flutter_and_friends/updater/updater.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
   static Route<void> route() {
@@ -14,11 +15,9 @@ class SettingsPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => SettingsCubit()..init(),
-      child: const SettingsView(),
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(settingsDataProvider);
+    return const SettingsView();
   }
 }
 
@@ -104,34 +103,26 @@ class SettingsView extends StatelessWidget {
   }
 }
 
-class AppVersion extends StatelessWidget {
+class AppVersion extends ConsumerWidget {
   const AppVersion({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final version = context.select(
-      (SettingsCubit cubit) {
-        final state = cubit.state;
-        final packageVersion =
-            '''${state.version.major}.${state.version.minor}.${state.version.patch}''';
-        final buildNumber = '${state.version.build.singleOrNull ?? 0}';
-        final patchNumber =
-            state.patchNumber != null ? ' #${state.patchNumber}' : '';
-        return '$packageVersion ($buildNumber)$patchNumber';
-      },
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final version = ref
+        .watch(versionNumProvider)
+        .maybeWhen(data: (d) => d, orElse: () => '');
     return Text(version);
   }
 }
 
-class AppPatchNumber extends StatelessWidget {
+class AppPatchNumber extends ConsumerWidget {
   const AppPatchNumber({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final patchNumber = context.select(
-      (SettingsCubit cubit) => '${cubit.state.patchNumber ?? 0}',
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final patchNumber = ref
+        .watch(patchNumberProvider)
+        .maybeWhen(data: (d) => '$d', orElse: () => '0');
     return Text(patchNumber);
   }
 }
