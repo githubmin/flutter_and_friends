@@ -7,6 +7,8 @@ environment:
   sdk: ">=3.0.6 <4.0.0"
 
 dependencies:
+  flutter_riverpod: ^2.4.9
+  riverpod_annotation: ^2.3.3
   bloc: ^8.1.2
   equatable: ^2.0.5
   firebase_core: ^2.15.1
@@ -33,6 +35,9 @@ dev_dependencies:
     sdk: flutter
   json_serializable: ^6.7.1
   very_good_analysis: ^5.0.0
+  custom_lint:
+  riverpod_generator: ^2.3.9
+  riverpod_lint: ^2.3.7
 
 flutter:
   assets:
