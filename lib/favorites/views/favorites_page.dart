@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_and_friends/favorites/favorites.dart';
+import 'package:flutter_and_friends/favorites/logic/providers.dart';
 import 'package:flutter_and_friends/schedule/schedule.dart';
 import 'package:flutter_and_friends/theme/widgets/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FavoritesPage extends StatelessWidget {
   const FavoritesPage({super.key});
@@ -11,19 +11,17 @@ class FavoritesPage extends StatelessWidget {
   Widget build(BuildContext context) => const FavoritesView();
 }
 
-class FavoritesView extends StatelessWidget {
+class FavoritesView extends ConsumerWidget {
   const FavoritesView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final favorites = ref.watch(favoritesDataProvider);
     return Scaffold(
       appBar: FFAppBar(),
-      body: BlocBuilder<FavoritesCubit, FavoritesState>(
-        builder: (context, state) {
-          if (state.events.isEmpty) return const EmptyFavorites();
-          return FavoritesListView(events: state.events);
-        },
-      ),
+      body: favorites.isEmpty
+          ? const EmptyFavorites()
+          : FavoritesListView(events: favorites),
     );
   }
 }
