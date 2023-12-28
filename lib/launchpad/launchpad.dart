@@ -1,2 +1,2 @@
-export './cubit/launchpad_cubit.dart';
+export './logic/logic.dart';
 export './view/view.dart';

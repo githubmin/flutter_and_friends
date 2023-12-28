@@ -3,17 +3,14 @@ import 'package:flutter_and_friends/favorites/favorites.dart';
 import 'package:flutter_and_friends/launchpad/launchpad.dart';
 import 'package:flutter_and_friends/schedule/schedule.dart';
 import 'package:flutter_and_friends/sponsors/sponsors.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LaunchpadPage extends StatelessWidget {
   const LaunchpadPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => LaunchpadCubit(),
-      child: const LaunchpadView(),
-    );
+    return const LaunchpadView();
   }
 }
 
@@ -30,12 +27,12 @@ class LaunchpadView extends StatelessWidget {
   }
 }
 
-class _LaunchpadBody extends StatelessWidget {
+class _LaunchpadBody extends ConsumerWidget {
   const _LaunchpadBody();
 
   @override
-  Widget build(BuildContext context) {
-    final state = context.watch<LaunchpadCubit>().state;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(launchpadTabProvider);
     switch (state) {
       case LaunchpadState.favorites:
         return const FavoritesPage();
@@ -47,16 +44,16 @@ class _LaunchpadBody extends StatelessWidget {
   }
 }
 
-class _BottomNavigationBar extends StatelessWidget {
+class _BottomNavigationBar extends ConsumerWidget {
   const _BottomNavigationBar();
 
   @override
-  Widget build(BuildContext context) {
-    final state = context.watch<LaunchpadCubit>().state;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(launchpadTabProvider);
     return BottomNavigationBar(
       useLegacyColorScheme: false,
       enableFeedback: true,
-      onTap: (index) => context.read<LaunchpadCubit>().toggleTab(index),
+      onTap: ref.read(launchpadTabProvider.notifier).toggleTab,
       currentIndex: state.index,
       items: const [
         BottomNavigationBarItem(
