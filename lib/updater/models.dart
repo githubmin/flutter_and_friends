@@ -1,4 +1,4 @@
-part of 'updater_cubit.dart';
+import 'package:equatable/equatable.dart';
 
 enum UpdaterStatus { idle, updateCheckInProgress, downloadInProgress }
 

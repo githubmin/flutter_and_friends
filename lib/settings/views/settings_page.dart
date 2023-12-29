@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_and_friends/settings/logic/providers.dart';
 import 'package:flutter_and_friends/theme/theme.dart';
 import 'package:flutter_and_friends/updater/updater.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -21,28 +20,14 @@ class SettingsPage extends ConsumerWidget {
   }
 }
 
-class SettingsView extends StatelessWidget {
+class SettingsView extends ConsumerWidget {
   const SettingsView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final headingStyle = theme.textTheme.titleMedium;
-    return BlocListener<UpdaterCubit, UpdaterState>(
-      listenWhen: (previous, current) =>
-          previous.status != current.status &&
-          current.status == UpdaterStatus.idle,
-      listener: (context, state) {
-        if (!state.updateAvailable) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(
-                content: Text('No update available'),
-              ),
-            );
-        }
-      },
+    return UpdateListener(
       child: Scaffold(
         appBar: AppBar(title: const Text('Settings')),
         body: ListView(
@@ -57,7 +42,8 @@ class SettingsView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [Text('Version'), AppVersion()],
               ),
-              onTap: () => context.read<UpdaterCubit>().checkForUpdates(),
+              onTap: () =>
+                  ref.read(updaterCProvider.notifier).checkForUpdates(),
             ),
             ListTile(
               title: const Text('Source Code'),

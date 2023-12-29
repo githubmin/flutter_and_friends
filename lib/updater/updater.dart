@@ -1,2 +1,3 @@
-export 'cubit/updater_cubit.dart';
+export 'models.dart';
+export 'providers.dart';
 export 'widgets/widgets.dart';
