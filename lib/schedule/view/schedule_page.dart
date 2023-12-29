@@ -1,33 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_and_friends/schedule/schedule.dart';
 import 'package:flutter_and_friends/theme/theme.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SchedulePage extends StatelessWidget {
   const SchedulePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ScheduleCubit(),
-      child: const ScheduleView(),
-    );
+    return const ScheduleView();
   }
 }
 
-class ScheduleView extends StatelessWidget {
+class ScheduleView extends ConsumerWidget {
   const ScheduleView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final state = context.watch<ScheduleCubit>().state;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(scheduleTabProvider);
     return DefaultTabController(
       initialIndex: state.index,
       length: ScheduleState.values.length,
       child: Scaffold(
         appBar: FFAppBar(
           bottom: TabBar(
-            onTap: (index) => context.read<ScheduleCubit>().toggleTab(index),
+            onTap: ref.read(scheduleTabProvider.notifier).toggleTab,
             tabs: const <Widget>[
               Tab(child: Text('Day 1')),
               Tab(child: Text('Day 2')),
